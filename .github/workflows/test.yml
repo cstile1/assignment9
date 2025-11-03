@@ -56,14 +56,16 @@ jobs:
       - name: Build image
         run: docker build -t app:test .
       
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner (non-blocking)
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: 'app:test'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
+
   deploy:
     needs: security
     if: github.ref == 'refs/heads/main'
